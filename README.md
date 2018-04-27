@@ -187,3 +187,34 @@ promise_1.then(promise_2).then(promise_3)
 正如以上所说，Promise的实现完全是手工构建的一个对象，因此需要一个规范来让大家的Promise都相同。
 
 下面是一个思路遵循Promise/A+规范的实现。
+
+
+
+# 注意事项
+
+2018-4-28更新：在一个对一个异步函数调用try-catch时，请注意调用catch必须带参数e，否则catch不到错误。 举例如下：
+
+``` javascript
+function test(){
+    return new Promise(
+        setTimeout(()=>{
+            throw "exception!"
+        },5000)
+    )
+}
+
+(function run(){
+    try {
+        test()
+    }
+    catch (e){
+        console.log(e)         //可以正常catch到
+    }
+    /*
+    catch{
+        console.log(e)         //catch不到
+    }
+    */
+})() 
+
+```
